@@ -23,12 +23,17 @@
     }
 ```
     react 赃检查 不会，会根据需要跟新的视图跟新部分视图，也就是如果一个DOM元素中间的文字需要改变，react的处理是只替换中间的文本，DOM元素本身不会发生进行删除重建，react还认为DOM是唯一的，不能进行修改，它代表UI的某个特定时刻，更新UI的方式只有创建全新的DOM,而它的赃检查只是使用了上一个DOM。
-    props是组建传值的属性，所有的传值都通过props，react也规定任何组建不能修改props只能用纯函数，即相同的函数相同的参数，不管调用多少次都是相同的结果，所以组建都要保护props，
-    每一个组建都有自己的state 这个是只属于组建本身的，要修改state也只能通过setState({Kye: newValue}),
+    props是组件传值的属性，所有的传值都通过props，react也规定任何组件不能修改props只能用纯函数，即相同的函数相同的参数，不管调用多少次都是相同的结果，所以组件都要保护props，
+    每一个组件都有自己的state 这个是只属于组件本身的，要修改state也只能通过
+```js
+    setState({Kye: newValue}),
+    // 策略函数，就是当传入不同的参数走不同的代码，
+    setState((state,props) => ({ state.key,props.key }))
+```
 ```js
     class Parent extends React.Component {
         constructor(){
-            super() //这个是必须的 所有的 react 组建都继承与 react 封装好的 react - class
+            super() //这个是必须的 所有的 react 组件都继承与 react 封装好的 react - class
             this.state = {
                 num: 1
             }
@@ -51,19 +56,19 @@
 | react                     | vue            | describe |
 |---------------------------|-----           |----------|
 | constructor               | beforeCreate   | 初始化数据 &&vue：可以在这里做Ajax请求       |
-| componentWillMount        | created        | 代表组建经历过初始化数据，但是还未渲染      |
-| componentDidMount         | beforeMout     | react：DOM节点已经生成，组建第一次渲染，这里react调用AJAX请求，数据返回state会从新渲染&&vue: 挂载完成         |
-| componentWillUnmount      | monted         | react：组建完成卸载和数据销毁&& vue挂载完成         |
+| componentWillMount        | created        | 代表组件经历过初始化数据，但是还未渲染      |
+| componentDidMount         | beforeMout     | react：DOM节点已经生成，组件第一次渲染，这里react调用AJAX请求，数据返回state会从新渲染&&vue: 挂载完成         |
+| componentWillUnmount      | monted         | react：组件完成卸载和数据销毁&& vue挂载完成         |
 | componentWillReceiveProps | beforeUpdate   | react：接受父组件props会重新渲染&&vue：监听数据变化并做出下一步修改视图的准备         |
 | getDerivedStateFromProps  | updated        | react：newUp&&vue：根据视图更新数据或者数据跟新视图      |  new
-| shouldComponentUpdate     | beforeDestroy  | react：可以控制组建渲染，当state发生变化时，react会更新视图，但是在这个过程中如果在这里 return false则不会更新渲染&&vue：组建销毁前，用于清空一些定时器什么的         |
-| componentWillUpdate       | destroyed      | react：当组建更新被移除前会先调用这个方法&&vue：组建被销毁        |
+| shouldComponentUpdate     | beforeDestroy  | react：可以控制组件渲染，当state发生变化时，react会更新视图，但是在这个过程中如果在这里 return false则不会更新渲染&&vue：组件销毁前，用于清空一些定时器什么的         |
+| componentWillUpdate       | destroyed      | react：当组件更新被移除前会先调用这个方法&&vue：组件被销毁        |
 | getSnapshotBeforeUpdate   | activate       | react：newUp&&vue：keep-alive创建时调用        |
-| componentDidUpdate        | dectivated     | react：组建更新完成，每次更新完成都会进入这里，第一次渲染也是&&vue：keep-alive销毁         |
+| componentDidUpdate        | dectivated     | react：组件更新完成，每次更新完成都会进入这里，第一次渲染也是&&vue：keep-alive销毁         |
 | render                    |     | react：会在这里将jsx生成VNode，更新时会用react的diff算法进行对比，进行赃检查         |
 
 ### &emsp;事件处理
-    在react中点击事件需要加上大括号而不是引号，且在react中组织默认事件不能通过return false，只能通过e.preventDefault();这个e是react封装好的，不必担心兼容，如果用es6的class来定义组建，组要绑定this
+    在react中点击事件需要加上大括号而不是引号，且在react中组织默认事件不能通过return false，只能通过e.preventDefault();这个e是react封装好的，不必担心兼容，如果用es6的class来定义组件，组要绑定this
 ```js
     class Demo extends React.Component{
         constructor(props){
@@ -99,7 +104,7 @@
 ```js
     var gz = "箭头函数没有this指向，默认是继承外部上下的this，所以箭头函数中的this指向的就是组件(也是这个类),事件对象必须显式的进行传递"
     <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
-    var jt = "bind() 方法可以把组件的this代替函数的this,事件对象以及更多的参数将会被隐式的进行传递。第一个this当前组建，第二个this防止处理在deleteRow函数内部的this失真 所以用了bind"
+    var jt = "bind() 方法可以把组件的this代替函数的this,事件对象以及更多的参数将会被隐式的进行传递。第一个this当前组件，第二个this防止处理在deleteRow函数内部的this失真 所以用了bind"
     <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 ### &emsp;条件渲染 
@@ -209,4 +214,123 @@
     }
 ```
 ### &emsp;表单
-    
+    1. 概念: 受控组件与非受控组件
+        --- 可以被 react 状态控制的组件就是受控组件, Input textarea 是非受控组件但是可以用onChange 事件转换为受控组件
+        --- 双向数据绑定就是受控组件
+        --- 若指定 value,不要将 value 值设置为 undefined && null
+```js
+    class App extends React.Component {
+        constructor() {
+            super()
+            this.state = {
+                value: '请输入内容' //若指向了它，不要设置为 undefined && null
+                name: 'name'
+            }
+            // this 绑定
+            this.handleInputChange = this.handleInputChange.bind(this);
+        }
+        handleInputChange(e) {
+            e = // 事件 
+            e.target = // DOM 元素
+            e.target.value = // 值
+            e.target.name = // DOM 元素的 name,多个 input 可以使用这个方法区分 input 
+            e.target.checked = // 单选框复选框的 checked = false && true 
+        }
+        render() {
+            return (
+                <>
+                    <input type="text" value={ this.state.value } name={ this.state.name }>
+                </>
+            )
+        }
+    }
+```
+### &emsp;状态提升
+    1. 这里面遇到的坑,当要实现 input 与子组件内容同步更新时
+```js
+    class sun extends React.Component {
+        // 这个 props 只会在第一次调用的时候执行一次，后面就不会调用了
+        constructor(props) {
+            super()
+            // 这个 state 只会在 constructor 执行的时候才会执行一次赋值
+            this.state= {
+                k: props.v
+            }
+        }
+        // 若需要同步更新，直接使用 this.props 即可
+        render() {
+            return (
+                <>{ this.props.v}</>
+            )
+        }
+    }
+```
+### &emsp; 组合&&继承
+    1. 组合 && 嵌套 ps: Vue v-slot(插槽) 会发现与这样差不多,但是 react 并没有 槽(solt)概念, 因为它的所有东西都可以用 props 进行传递,也可以写任意东西
+        --- 只需要在子组件中写上 { this.props.children } 
+```js
+    class Sun extends React.Component {
+        constructor(props) {
+            super()
+        }
+        render() {
+            return(
+                <>
+                    { this.props.children }
+                </>
+            )
+        }
+    }
+    class Parent extends React.Component {
+        constructor() {
+            super()
+        }
+        render() {
+            return(
+                <>
+                    <Sun>
+                        { ... 任意标签 && 内容 }
+                    </Sun>
+                </>
+            )
+        }
+    }
+```
+    2. 若需要在指定位置插入内容,或者内容对应显示,需要在子组件上留下印记,也就是 "名字" react 把这个叫做 "洞"
+        ---它们会对应这个自己的名字显示在位置上，而不是依次显示
+```js
+    class Sun extends React.Component {
+        constructor(props) {
+            super()
+        }
+        render() {
+            return(
+                <>
+                    { this.props.left }
+                    { this.props.right }
+                </>
+            )
+        }
+    }
+    class Parent extends React.Component {
+        constructor() {
+            super()
+        }
+        // 显然跟上面的是相反的顺序, 渲染的时候他会按照上面这个顺序去插入,会先找到 left 渲染, 再找到 right 渲染。
+        // 也就是子组件写的什么顺序, 就是什么顺序
+        render() {
+            return(
+                <>
+                    <Sun right={
+                        <>1 rigth </>
+                    }
+                    left={
+                        <>2 left</>
+                    } />
+                </>
+            )
+        }
+        // PS: 如果没传则不显示
+    }
+    // 扩展: 通过状态传递不同的 props, 达成条件渲染
+```
