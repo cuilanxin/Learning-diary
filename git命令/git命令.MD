@@ -75,6 +75,10 @@ git pull   拉代码
 git push  推代码
 git commit -m""    描述代码内容
 
+
+git push origin clx --force  强制推送到远程
+
+
 ut司机
 ug货主
 
