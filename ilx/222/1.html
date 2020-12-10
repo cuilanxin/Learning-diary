@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="button" value="按钮" id='btn'>
+    <input type="button" value="按钮" id='btn1'>
+</body>
+<script>
+//ajax
+function Ajax(params){
+    let {type, data, url, cb}=params;
+    if(window.XMLHttpRequest){
+        xhr=new window.XMLHttprequest();
+    }else if(window.ActiveXObject){
+        xhr=window.ActiveXObject('Microsoft.XMLHTTP')
+    }
+    if(type==='GET'){
+        xhr.open('GET',url+'?'+data);
+        xhr.send()
+    }else if(type==='POST'){
+        xhr.setRequestHeader('content-type',
+        'application-/x-www-form-urlencoded');
+        // application-x-form-urlencoded
+        // text/html
+        // application/json
+        xhr.open('POST',url);
+        xhr.send(data)
+    }
+    xhr.onreadystatechange=function(){
+        if(xhr.readyState==4 && xhr.readeyState==200){
+            cb(xhr.responseText)
+        }
+    }
+}
+console.log('=======ajax');
+
+//深拷贝
+    var arr={
+        name:'a',
+        age:1,
+        arr1:[1,2,3,4,5],
+        arr2:{
+            name:'q',
+            age:2
+        }
+    }
+    var cloneDeep1={};
+    function cloneDeep(arr,arr1){
+        for (var k in arr){
+            if(Object.prototype.toString.call(arr[k])==='[object Object]'){
+                arr1[k]={};
+                cloneDeep(arr[k],arr1[k]);
+            }else if(Object.prototype.toString.call(arr[k])==='[object Array]'){
+                arr1[k]=[];
+                cloneDeep(arr[k],arr1[k]);
+            }
+            arr1[k]=arr[k]
+        }
+    }
+    cloneDeep(arr,cloneDeep1)
+    arr.name='b'
+    console.log(arr,cloneDeep1);
+    console.log('=======深拷贝');
+//防抖
+    document.getElementById('btn').onclick=fd(fn,1,2);
+    function fn(e,params){
+        console.log('1',params);
+        console.log(e);
+        console.log(this)
+    }
+    function fd(cb){
+        var setTimeout1=null; 
+        var arg=[];
+        if(arguments.length>1){
+            for(let i=1;i<arguments.length;i++){
+                arg.push(arguments[i])
+            }
+        }
+        return function(e){
+            e=e||event;
+            clearTimeout(setTimeout1);
+            setTimeout1=setTimeout(function(){
+                cb.call(this,e,arg)
+            }.bind(this),1000)
+        }
+    }
+    console.log('=======防抖');
+// 节流
+    document.getElementById('btn1').onclick=jl(fn);
+    function jl(cb){
+        var setTimeout1=null;
+        var onOFF=true;
+        console.log(setTimeout1)
+        return function(e){
+            e=e||event;
+            if(!onOFF) return;
+            onOFF=false;
+            setTimeout1=setTimeout(function(){
+                onOFF=true;
+                cb.call(this,e)
+            }.bind(this),1000)
+        }
+    }
+    console.log('=======节流');
+// mycall
+    var myCall1={
+        msg:'q',
+    }
+    function m (parms,parms2){
+        console.log('我是myCall')
+        console.log(this.msg);
+        console.log(parms,parms2);
+    }
+    Function.prototype.myCall=function(fn){
+        fn=fn||window;
+        fn[this.name]=this;
+        if(arguments.length>1){
+            var arg='';
+            for(let i=1;i<arguments.length;i++){
+                switch(typeof arguments[i]){
+                    case 'string':
+                        arg+='"'+arguments[i]+'"'+','
+                        break;
+                    case 'number':
+                    case 'boolean':
+                        arg+=arguments[i]+',';
+                        break;
+                }
+            }
+            eval('fn[this.name]('+arg+')')
+        }else {
+                fn[this.name]();
+            }
+    }
+    m.myCall(myCall1,1,2);
+    console.log('=======myCall');
+//  myApply
+    var myApply1={
+        msg:'我是myApply'
+    }
+    function myApply2(params,params1,params2){
+        console.log(this.msg);
+        console.log(params,params1,params2)
+    }
+    Function.prototype.myApply=function(obj,params){
+        obj=obj||window;
+        obj[this.name]=this;
+        if(Object.prototype.toString.call(params)==='[object Array]'){
+            if(params && params.length>0){
+                let arg='';
+                for(let i=0;i<params.length;i++){
+                    switch(typeof params[i]){
+                        case 'string':
+                            arg+='"'+params[i]+'",';
+                            break;
+                        case 'number':
+                        case 'boolean':
+                            arg+=params[i]+',';
+                            break;
+                    }
+                }
+                eval('obj[this.name]('+arg+')')
+            }else {
+                obj[this.name]();
+            }
+        }else {
+            console.error('apply参数是数组');
+        }
+    }
+    myApply2.myApply(myApply1,['1',true,1])
+    console.log('====myApply')
+//  myBind
+    var mybind1={
+        msg:'我是mybind'
+    }
+    function myBind2(params,params1){
+        console.log(this.msg);
+        console.log(params,params1)
+    }
+    Function.prototype.myBind=function(obj){
+        obj=obj||window;
+        obj[this.name]=this;
+        console.log(obj[this.name]);
+        
+        let newObj=null;
+        if(arguments.length>1){
+            let newObj_argumens=arguments;
+            let newObj_this=this;
+            newObj=function(){
+                let arg='';
+                for(let i=1;i<newObj_argumens.length;i++){
+                    switch(typeof newObj_argumens[i]){
+                        case 'string':
+                            arg+='"'+newObj_argumens[i]+'",';
+                            break;
+                        case 'number': 
+                        case 'boolean':
+                            arg+=newObj_argumens[i]+',';
+                            break;
+                    }
+                }
+                eval('obj[newObj_this.name]('+arg+')');
+            }
+        }else {
+            newObj=obj[newObj_this.name];
+        }
+        return newObj;
+    }
+    console.log(myBind2.myBind(mybind1,12,'s'));
+    
+    myBind2.myBind(mybind1,12,true)();
+    // myBind2(1323,)
+    
+
+
+    function Ajax(params){
+        let {type, url, data, cb}=params;
+        if(window.XMLHttpRequest){
+            xhr=new window.XMLHttpRequest();
+        }else if(window.ActiveXObject) {
+            xhr=window.ActiveXObject('Microsoft.XHMHTTP');
+        }
+        if(type==='GET'){
+            xhr.open('GET',url+'?'+data);
+            xhr.send;
+        }else if(type==='POST'){
+            xhr.setRequestHeader('content-type',
+            'application/x-www-form-urlencoded')
+            // application/x-form-urlencoded
+            // text/html
+            // json/application
+            xhr.open('POST',url);
+            xhr.send(data)
+        }
+        xhr.onreadyStatechange=function(){
+            if(xhr.readyState===4 &&xhr.readyState===200){
+                cb(xhr.responseText)
+            }
+        }
+    }
+
+    console.log('===========================================================');
+        let qcArr=[1,1,1,1,1,2,2,2,3,3,4,4,55];
+        let qcObje={};
+        for( let key in qcArr){
+            // console.log(qcObje[qcArr[key]])
+            if(qcObje[qcArr[key]]){
+                qcObje[qcArr[key]]++;
+                // console.log(qcObje[qcArr[key]])
+            }else {
+                qcObje[qcArr[key]]=1;
+            }
+        }
+        let newqcObje=[];
+        for( let key in qcObje){
+            newqcObje.push(key-0);
+        }
+        document.write(newqcObje)
+        console.log(newqcObje)
+        console.log(qcObje);
+//去重
+
+
+
+        let objjj={
+            name:1
+        }
+        for (const key in objjj) {
+           console.log(objjj[key])//name
+           console.log(key)//1
+        }
+
+//reduce方法封装
+        //reduce是es6数组新出的方法
+        //它是从第二个开始循环，
+        let reArr=[1,2,3,4,5];
+        let reSum=reArr.reduce(function(prew,next){
+            return prew+next;
+        })
+        console.log(reSum);
+        function myReduce(arr,cb){
+            let sum=undefined;
+            for(let i=1;i<arr.length;i++){
+                //所以这样要把下标变成1，
+                if(i===1){
+                    sum=cb(arr[i-1],arr[i])
+                }else{
+                    sum=cb(sum,arr[i])
+                }
+            }
+            return sum;
+        }
+        let myReSum=myReduce(reArr,function(prew,next){
+            return prew+next
+        })
+        document.write('</br>',myReSum,'</br>')
+</script>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="button" value="按钮" id="btn">
+</body>
+<script>
+//防抖就是一个高阶函数，将要执行的事件体函数以回调函数的形式传入防抖函数
+//使用定时器只执行一次即可，每次触发事件时，都将先前的定时器清除，只留下事件触发后的最后
+//一个定时器去执行，保证高频事件触发时，至少执行一次事件函数体，但它是在高频触发后
+//最后调用一次，那么最后这个定时器会浪费一定资源，因为最后这个定时器并不清除
+//js中许多事件都是持续触发的高频事件，这些可能会影响性能或者
+//造成js卡顿，防抖就是在上面的场景中至少成功触发一次，
+function fd(cb){
+    var settimeout1=null;
+    var params=[];
+    for(var i=1;i<arguments.length;i++){
+        params.push(arguments[i]);
+    }
+    return function(e){
+        clearTimeout(settimeout1);
+        e=e||event;
+        settimeout1=setTimeout(function(){
+            console.log(this,e,"1")
+            cb.call(this,e,params);
+        }.bind(this),1000)
+    }
+}
+function fn(e,params){
+    console.log(e,params)
+    console.log('12')
+}
+document.getElementById('btn').onclick=fd(fn,1,2,3,3);
+// document.onclick=fd(fn)
+//
+</script>
+</html>

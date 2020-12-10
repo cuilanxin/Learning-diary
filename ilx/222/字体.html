@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .anim{
+            width: 300px;
+            height: 300px;
+            margin-top: 100px;
+            margin-left: 100px;
+            font-family: bb2360;
+            src:url("./bb2360/simsun.ttf")
+
+        }
+        /* @font-face{
+            font-family: 'bb2360';
+            src:url("./bb2360/simsun.ttf")
+        } */
+
+    </style>
+</head>
+<body>
+    <div></div>
+    <div></div>
+    <div class="anim">字体</div>
+     字体
+</body>
+<script>
+    dv1=document.getElementsByTagName("div")[0];
+    dv2=document.getElementsByTagName("div")[1];
+    console.log(dv1==dv2)
+    function fn (a){
+        function fn1(){
+            console.log(a)
+        }
+        fn1()
+    }
+    fn(1)
+</script>
+</html>

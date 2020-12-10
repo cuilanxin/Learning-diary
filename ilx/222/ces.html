@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    console.log(add(1)(2,3)(4,5)(6,7).valueOf());
+    function add(){
+        let AddArguments=Object.prototype.toString.call(arguments[0])==='[object Array]'? arguments[0]:Array.from(arguments);
+        function add1(){
+            for (var i in arguments){
+                AddArguments.push(arguments[i]);
+            }
+            return add(AddArguments)
+        }
+        add1.valueOf=function(){
+            let num=0;
+            for (let i=0;i<AddArguments.length;i++){
+                num+=AddArguments[i]
+            }
+            return num;
+        }
+        console.log(AddArguments);     
+        return add1;
+    }
+//柯里化
+ 
+
+    function Ajax(params){
+        let { type, url, data, cb}=params;
+        if( window.XMLHTTPRequest){
+            xhr= new window.XMLHttpRequest()
+        }else if(window.ActiveXObject){
+            xhr= window.ActiveXObject('Microsoft.XMLHttp')
+        }
+        if(type==='GET'){
+            xhr.open('GET',url+'?'+data);
+            xhr.send()
+        }else if(type==='POST'){
+            xhr.setRequestHeader('content-type',
+            'application/x-www-form-urlencoded');
+        //application/x-form-urlencoded;
+        //text/html;
+        //application/json
+            xhr.open('POST',url);
+            xhr.send(data)
+        }
+        xhr.onredystatechange=function (){
+            if(xhr.readyState===4 && xhr.readyState===200){
+                cb(xhr.responseText)
+            }
+        }
+
+    }
+
+
+
+    let obj={
+        msg:'w'
+    }
+    function fn(params,params1){
+        document.write(this.msg);
+        console.log('</br>',params,params1)
+    }
+    Function.prototype.myCall=function(obj){
+        obj=obj||window;
+        obj[this.name]=this;
+        if(arguments.length>1){
+            let arg='';
+            for(let i=1;i<arguments.length;i++){
+                switch(typeof arguments[i]){
+                    case 'string':
+                        arg+='"'+arguments[i]+'",';
+                        break;
+                    case 'number': 
+                    case 'boolean':
+                        arg+=arguments[i]+',';
+                        break;
+                }
+            }
+            eval('obj[this.name]('+arg+')')
+        }else {
+            obj[this.name]();
+        }
+    }
+
+    fn.myCall(obj,1,)
+
+
+
+
+// function a(){
+//     console.log(arguments[0]);
+//     console.log(arguments[1]);
+// }
+// a(1,2);
+// a([1,2])
+</script>
+
+</html>

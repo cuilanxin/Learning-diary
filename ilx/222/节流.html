@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="button" value="按钮1" id="btn">
+</body>
+<script>
+function jl(cb){
+    var onOff=true;
+    var settimeout1=null;
+    return function(e){
+        e=e||event;
+        if(!onOff) return;
+        onOff=false;
+        settimeout1=setTimeout(function(){
+            cb.call(this);
+            onOff=true;
+        }.bind(this),1000)
+    }
+}
+function fn(e){
+    console.log('1');
+    console.log(e)
+};
+document.getElementById("btn").onclick=jl(fn);
+
+//节流高级
+// let btn1=document.getElementById('btn');
+// btn1.addEventListener
+
+    function A(a){
+        A=function (b){
+            console.log('冲洗')
+
+            alert(a+b++)
+            console.log('冲洗')
+        }
+        console.log('A')
+        alert(a++)
+    }
+    // A(1)
+    // A(2)
+
+</script>
+</html>

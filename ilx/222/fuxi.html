@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVVM</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const data = {
+    name: 'shanshan',
+    age: 18,
+    shan: {
+      name: 'shanshan',
+      age: 18,
+      obj: {}
+    },
+    arr: [1, 2, 3]
+    }
+
+    function upData(){
+        console.log('gxxs')
+    }
+
+    let oldArrPro=Array.prototype;
+    let Arrpro=Object.create(oldArrPro);
+    ['push','unshift'].forEach(methodes=>{
+        Arrpro[methodes]=function(){
+            upData();
+            oldArrPro[methodes].call(this,...arguments);
+        }
+    })
+
+    function observer(data){
+        if(typeof data!=='object'||data===null){
+            return;
+        };
+        if(Array.isArray(data)){
+            data.__proto__=Arrpro;
+        }
+        for (const key in data) {
+            definepro(data,key,data[key])
+        }
+    }
+
+    function definepro(data,key,value){
+        observer(value);
+        Object.defineProperty(data,key,{
+            get:function(){
+                return value;
+            },
+            set:function(newValue){
+                if(value!==newValue){
+                    value=newValue;
+                    observer(value);
+                    upData();
+                }
+            }
+        })
+    };
+
+    // function $set(data,key,value){
+    //     if(Array.isArray(data)){
+    //         data.splice(key,1,value);
+    //         return value;
+    //     }
+    //     definepro(data,key,value);
+    //     upData();
+    //     return value;
+    // };
+    function $delete(data,key){
+        if(Array.isArray(data)){
+            data.splice(key,1);
+            return;
+        };
+        delete data[key];
+        upData();
+    }
+    observer(data);
+    data.name=1;
+    data.name=11;
+    // data.arr[1]=22;
+    delete data.arr[0];
+</script>
+</html>

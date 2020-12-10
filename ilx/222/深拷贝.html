@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+var arr1={
+    name:'a',
+    age:1,
+    arr:[1,2,3,4,5],
+    arr2:{
+        name:'q',
+        age:2
+    }
+}
+var arr2={};
+clonDeep(arr1,arr2);
+arr1.name='haha';
+console.log(arr1,arr2)
+function clonDeep(arr,arr1){
+    for(var k in arr){
+        //判断是不是object
+        if(Object.prototype.toString.call(arr[k])==='[object Object]'){
+            arr1[k]={};
+            clonDeep(arr[k],arr1[k]);
+        //判断是不是Array
+        }else if(Object.prototype.toString.call(arr[k])==='[object Array]'){
+            arr1[k]=[];
+            clonDeep(arr[k],arr1[k]);
+        //既不是object也不是Array直接复制
+        }else{
+            arr1[k]=arr[k]
+        }
+    }
+}
+console.log('=======================')
+//克隆二
+    // let qqq={
+    //     name:1
+    // }
+    // let en = JSON.parse(JSON.stringify(obj)) JSON.stringify()转成字符串，
+    //JSON.parse()转成对象
+    // console.log(qqq,1)
+    // console.log(JSON.stringify(qqq),2)
+    // let e=JSON.stringify(qqq)
+    // console.log('</br>',JSON.parse(e))
+
+//很深克隆
+    function cloneDeep(obj){
+        let newObje=obj.constructor;//这个会在实例
+        for( let index in obj){
+            if(obj.hasOwnProperty(index)){
+                newObje[index]=cloneDeep(obj[index]);
+            }
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // Function.prototype.myCall=function (fn){
+    //     console.log('我时func1打印的this',this,this.name);        
+    //     //this时函数，this.name时函数名  
+    //     fn=fn||window;//第一步解决call第一个参数的指向问题，
+    //     fn[this.name]=this;//给fn动态添加一个属性让她等于这个函数
+    //     //第二部解决call后面函数参数问题
+    //     var arg=[...arguments].slice(1);
+    //     fn[this.name](...arg);
+    // }
+    // let obj={
+    //      p1:'我是obj的p1',
+    // }
+    // function func(parms,parms2,parms3){
+    //     console.log('我是fn打印的this',this);
+    //     console.log(this.p1)
+    //     console.log(parms,parms2,parms3);
+    // }
+    // func.myCall(obj,1,2,'我');
+    console.log('=====================上面是简单版=============================');
+    Function.prototype.myCall=function (fn){
+        console.log('我时myCall打印的this',this,this.name);     
+        //this时函数，this.name时函数名  
+        fn=fn||window;//第一步解决call第一个参数的指向问题，
+        fn[this.name]=this;//给fn动态添加一个属性让她等于这个函数
+        //第二部解决call后面函数参数问题
+        // console.log(arguments)
+        if(arguments.length>1){
+            var arg='';
+            for(var i=1;i<arguments.length;i++){
+                switch(typeof arguments[i]){
+                    case 'string':
+                        arg+='"'+arguments[i]+'"';
+                        break;
+                    case 'number':
+                    case 'boolean':
+                        arg+=arguments[i]+',';
+                        break;
+                }
+            }            
+            eval('fn[this.name]('+arg+')')
+            console.log("woshiarg",arg);
+            
+        }else {
+            fn[this.name]();
+        }
+    }
+    let obj={
+         p1:'我是obj的p1',
+    }
+    function func(parms1,parms2,parms3){
+        console.log('我是fn打印的this',this);
+        console.log(this.p1)
+        console.log(parms1,parms2,parms3);
+    }
+    func.myCall(obj,1,2,'我');
+</script>
+</html>

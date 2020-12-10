@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script src="../js/Mypromise.js"></script>
+<script>
+    let pro= new MyPromise((resolve,reject)=>{
+        // console.log("1111");
+        // resolve(1);
+        setTimeout(()=>{
+            resolve(1);
+        },3000);
+    })
+    pro.then(data=>{console.log(2,data)})
+    pro.then(data=>{console.log(3,data)})
+    pro.catch(err=>{console.log(4,err)})
+    console.log(pro);
+</script>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // function myNew(){
+    //     //首先获取myNew的第一个参数,第一个参数是一个类,构造函数
+    //     let Constructor = [].shift.call[arguments];
+    //     //删除的并不是数组而是arguments,剩下的arguments就是参数
+    //     //new 要返回一个对象
+    //     let obj={};//创建一个要返回的对象
+    //     //new 实例化后的对象,它的_proto_是指向类的prototype
+    //     //因此将类的prototype给要返回对象的_proto_赋值，
+    //     obj._proto_=Constructor.prototype;//相当于继承原型方法
+    //     //new Constructor() 所以要啊将类执行
+    //     //执行时this指向对象，还要把参数传给对象所以用apply
+    //     let r=Constructor.apply(obj,arguments);
+    //     //这样obj就会有类中的属性
+    //     //判断返回的结果时不时一个引用类型,如果不是就把obj返回
+    //     return r instanceof Object? r:obj
+    // }{}
+
+    let a = 1;
+    function fn1(){
+        let a1 = 2;
+        function fn2(){
+            let a2 = 3
+            if(true){
+                var a3 = 4
+            }
+            console.log(a3)
+            console.log(a)
+            console.log(a + a1 + a2)
+        }
+        fn2()
+    }
+    fn1()
+</script>
+</html>
